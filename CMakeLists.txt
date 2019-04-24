@@ -8,3 +8,9 @@ endif()
 
 # Main executable
 add_executable(torhash torhash.c)
+
+# Link plibsys library
+target_include_directories(torhash PUBLIC "/usr/local/include/plibsys")
+target_link_libraries(torhash plibsysstatic)
+target_link_libraries(torhash pthread) # Required by plibsys
+target_link_libraries(torhash dl) # Required by plibsys
