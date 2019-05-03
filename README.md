@@ -41,7 +41,7 @@ The output and other details of the final hashed string are defined in section 5
 
 ## Motivation
 
-I have started work on this program because I hit a roadblock while working on another program ([ProxAllium](https://proxallium.dtw.tools), which is currently being re-written in C). I had to make a choice between calling `tor --hash-password` to generate the hash for a password or generating the password in the program itself without relying on calling `tor`, for the latter I did not have enough technical understanding, so I began researching the documentation and source code for Tor. This program is the resulting fruit of that research.
+I have started work on this program because I hit a roadblock while working on another program ([ProxAllium](https://proxallium.dtw.tools), which is currently being [re-written](https://github.com/DcodingTheWeb/ProxAllium/tree/next-gen) in C). I had to make a choice between calling `tor --hash-password` to generate the hash for a password or generating the password in the program itself without relying on calling `tor`, for the latter I did not have enough technical understanding, so I began researching the documentation and source code for Tor. This program is the resulting fruit of that research.
 
 This is intended to be a personal experiment to further develop my programming skills in C, this is also the first time I have used the CMake tool in the build process.
 
