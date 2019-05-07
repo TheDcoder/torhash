@@ -1,8 +1,9 @@
-#include <plibsys.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <tomcrypt.h>
 
 // SHA1 digest length
 #define DIGEST_LEN 20
@@ -21,9 +22,6 @@ int main(int argc, char *argv[]) {
 		fputs("Please supply at least one parameter!\n", stderr);
 		return EXIT_FAILURE;
 	}
-	
-	// Initialize plibsys
-	p_libsys_init();
 	
 	// Seed the random number generator
 	srand(1337);
@@ -81,30 +79,38 @@ bool secret_to_key_rfc2440(char *key_out, size_t key_out_len, const char *secret
 	secret_len += S2K_RFC2440_SPECIFIER_LEN - 1;
 	
 	// Hash the data
-	PCryptoHash *hash = p_crypto_hash_new(P_CRYPTO_HASH_TYPE_SHA1);
-	if (!hash) {
-		fputs("Failed to initialize cryptographic hash context!\n", stderr);
+	hash_state hash;
+	if (sha1_init(&hash) != CRYPT_OK) {
+		fputs("Failed to initialize cryptographic hash state!\n", stderr);
 		return false;
 	}
+	
+	int result;
 	while (count != 0) {
 		if (count >= secret_len) {
-			p_crypto_hash_update(hash, (puchar *) temp, secret_len);
+			result = sha1_process(&hash, (unsigned char *) temp, secret_len);
 			count -= secret_len;
 		} else {
-			p_crypto_hash_update(hash, (puchar *) temp, count);
+			result = sha1_process(&hash, (unsigned char *) temp, count);
 			count = 0;
+		}
+		if (result != CRYPT_OK) {
+			fputs("Failed to hash data!\n", stderr);
+			return false;
 		}
 	}
 	free(temp);
 	
 	// Get the raw digest
-	size_t digest_len = DIGEST_LEN;
 	unsigned char digest[DIGEST_LEN];
-	p_crypto_hash_get_digest(hash, digest, &digest_len);
-	p_crypto_hash_free(hash);
+	result = sha1_done(&hash, digest);
+	if (result != CRYPT_OK) {
+		fputs("Failed to finalize hashed data!\n", stderr);
+		return false;
+	}
 	
 	// Copy the digest
-	if (key_out_len <= digest_len) {
+	if (key_out_len <= DIGEST_LEN) {
 		memcpy(key_out, digest, key_out_len);
 		return true;
 	} else {
@@ -115,7 +121,6 @@ bool secret_to_key_rfc2440(char *key_out, size_t key_out_len, const char *secret
 
 void clean_exit() {
 	// Clean up and exit
-	p_libsys_shutdown();
 	exit(EXIT_SUCCESS);
 }
 
