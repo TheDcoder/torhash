@@ -9,13 +9,10 @@ endif()
 # Main executable
 add_executable(torhash torhash.c)
 
-# Link plibsys library
-target_include_directories(torhash PUBLIC "/usr/local/include/plibsys")
-find_library(PLIBSYS_PATH plibsysstatic "/usr/local/lib")
-target_link_libraries(torhash ${PLIBSYS_PATH})
+# Link OpenSSL libcrypto
 if(UNIX)
-	target_link_libraries(torhash pthread) # Required by plibsys
-	target_link_libraries(torhash dl) # Required by plibsys
-elseif(CMAKE_HOST_WIN32)
-	target_link_libraries(torhash ws2_32) # Required by plibsys
+	target_link_libraries(torhash pthread) # Required by crypto
+	target_link_libraries(torhash dl) # Required by crypto
+	target_link_libraries(torhash z) # Required by crypto
 endif()
+target_link_libraries(torhash libcrypto.a)

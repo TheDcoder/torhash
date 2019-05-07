@@ -4,7 +4,7 @@ This is a simple (and **insecure**) implementation of the salted hash used by To
 
 ## Build
 
-The requirements are [CMake](https://cmake.org) and the cross-platform library [plibsys](https://github.com/saprykin/plibsys), which is statically linked to eliminate the need of redistributing the library along with the binary. On Windows, you will also need [MSYS2](https://www.msys2.org/) which should come with the MinGW-w64 `gcc` compiler, don't forget to choose the desired shell before compiling.
+The only requirement is the OpenSSL library. [CMake](https://cmake.org) is used for generating build files, on Windows, you will also need [MSYS2](https://www.msys2.org/) which should come with the MinGW-w64 `gcc` compiler, don't forget to choose the desired shell before compiling.
 
 After making sure the requirements are installed, you can build running a relatively standard set of commands in the project directory:
 ```
