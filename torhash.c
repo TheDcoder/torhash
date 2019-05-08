@@ -23,17 +23,13 @@ int main(int argc, char *argv[]) {
 		return EXIT_FAILURE;
 	}
 	
-	// Seed the random number generator
-	srand(1337);
-	
 	// Allocate buffer for storing the key
 	char key[S2K_RFC2440_SPECIFIER_LEN + DIGEST_LEN];
 	
 	// Iterate over arguments
 	for (size_t arg_num = 1; arg_num < argc; ++arg_num) {
 		// Populate the specifier with random information
-		// NOTE: This is not cryptographically secure and works with a fixed seed
-		for (size_t n = 0; n < S2K_RFC2440_SPECIFIER_LEN - 1; ++n) key[n] = (char) rand();
+		sprng_read((unsigned char *) key, S2K_RFC2440_SPECIFIER_LEN - 1, NULL);
 		key[S2K_RFC2440_SPECIFIER_LEN - 1] = 96; // This is hard-coded in tor
 		
 		// Hash the string

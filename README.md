@@ -1,6 +1,6 @@
 # torhash
 
-This is a simple (and **insecure**) implementation of the salted hash used by Tor's control port authentication for the "hashed password" method.
+This is a simple implementation of the salted hash used by Tor's control port authentication for the "hashed password" method.
 
 ## Build
 
@@ -20,18 +20,16 @@ It is very simple to use `torhash`! It interprets all arguments as strings and c
 
 ```
 $ torhash "Test"
-16:E9CE2F53B6AAC5D460B77AC5EFCCA373847F80B6047CA91B61B8CED8BC
+16:61A4F54AB65B0E336067885E98D86445AF710FC608B4189C4050938D71
 ```
 
 ```
 $ torhash "Foo" "Bar"
-16:E9CE2F53B6AAC5D460A37D344256D0F922E1E79F90EB6607F999CC1720
-16:C853176BCCA35C7B60C01AB75284FD11781C48B7F3CB28EB011007D6BA
+16:CE4C870DAE845C0E60567EA825BB25AA8BC6066FE0AD67598874AAE102
+16:673C130B93618DF060ECB37C89D9D22749125248122BE5113547D59769
 ```
 
 ## Technical Details
-
-**The results produced by `torhash` are insecure because the source of random data (used as salt) is generated using the [`rand`](https://en.cppreference.com/w/c/numeric/random/rand) function (with a fixed seed) from the C standard library, as such it is not cryptographically secure.** This also causes the hashes to be the same as long as they are in the same position/order in the same system.
 
 The hash itself is salted with random data and is computed according to the S2K (Iterated and Salted) algorithm in [RFC 2440](https://tools.ietf.org/html/rfc2440). [SHA-1](https://en.wikipedia.org/wiki/SHA-1) is used internally for the computation of the hash.
 
